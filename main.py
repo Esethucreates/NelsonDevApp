@@ -38,8 +38,8 @@ async def convert(string_to_convert: str = Path(min_length=1)):
 async def convert(request: Request):
     try:
         # Get the raw body as text
-        body = await request.body()
-        webhook_data = body.decode('utf-8')
+        body = await request.json()
+        webhook_data = body["data"]
 
         list_char = convert_to_string_and_sort(webhook_data)
         return {'word': list_char}
