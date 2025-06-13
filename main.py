@@ -1,14 +1,15 @@
-from typing import Optional
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Path
 
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+def convert_to_string_and_sort(string: str) -> list[str]:
+    list_char = [char for char in string]
+    list_char.sort()
+    return list_char
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+
+@app.post("/convert/{string_to_convert}")
+async def convert(string_to_convert: str = Path(min_length=1)):
+    list_char = convert_to_string_and_sort(string_to_convert)
+    return {'word': list_char}
