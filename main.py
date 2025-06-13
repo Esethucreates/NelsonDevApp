@@ -1,6 +1,19 @@
 from fastapi import FastAPI, Path
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "https://testdemonelsondevelopment.onrender.com"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def convert_to_string_and_sort(string: str) -> list[str]:
