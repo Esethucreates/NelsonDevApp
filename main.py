@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -32,3 +32,18 @@ def convert_to_string_and_sort(string: str) -> list[str]:
 async def convert(string_to_convert: str = Path(min_length=1)):
     list_char = convert_to_string_and_sort(string_to_convert)
     return {'word': list_char}
+
+
+@app.post("/convert")
+async def convert(request: Request):
+    try:
+        # Get the raw body as text
+        body = await request.body()
+        webhook_data = body.decode('utf-8')
+
+        list_char = convert_to_string_and_sort(webhook_data)
+        return {'word': list_char}
+
+    except Exception as e:
+        print(f"Error processing webhook: {e}")
+        return {"status": "error", "message": str(e)}
